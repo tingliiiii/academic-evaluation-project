@@ -36,19 +36,23 @@
 - [x] shadcn/ui 組件庫初始化及預安裝（Button、Input、Select、Card、Dialog、Table 等）
 - [x] 本地開發服務器驗證（http://localhost:3000 可訪問）
 
-### 第二階段：數據層 & API 層 🚧 進行中
+### 第二階段：數據層 & API 層 ✓ 已完成
 - [x] Prisma schema 定義（Wisdom、Tone、Student、Evaluation、EvaluationWisdom 五張表）
 - [x] Prisma seed 腳本編寫（初始化默認四字箴言和語氣）
 - [x] 環境配置文件優化（DATABASE_URL、DIRECT_URL 已配置）
 - [x] TypeScript 類型定義（lib/types.ts）
-- [ ] **進行中：** 數據庫遷移執行（`npx prisma migrate dev --name init`）
-- [ ] **待做：** Gemini API 層實現（lib/gemini.ts）
-- [ ] **待做：** API 路由實現
-  - /api/prompt/generate — 生成 prompt 預覽
-  - /api/evaluation/generate — 調用 Gemini 生成評語
-  - /api/evaluations/list — 獲取評語歷史
-  - /api/admin/wisdoms — 箴言 CRUD
-  - /api/admin/tones — 語氣 CRUD
+- [x] 數據庫遷移執行（`npx prisma migrate dev --name init`）
+- [x] Gemini API 層實現（lib/gemini.ts、lib/prompts.ts）
+- [x] API 路由實現
+  - [x] /api/prompt/generate — 生成 prompt 預覽
+  - [x] /api/evaluation/generate — 調用 Gemini 生成評語
+  - [x] /api/evaluations/list — 獲取評語歷史
+  - [x] /api/evaluations/[id] — 獲取/刪除評語詳情
+  - [x] /api/admin/wisdoms — 箴言 CRUD（認證保護）
+  - [x] /api/admin/tones — 語氣 CRUD（認證保護）
+- [x] 完整的輸入驗證（Zod schemas）
+- [x] RESTful API 設計 & 錯誤處理
+- [x] TypeScript 類型檢查通過
 
 ### 第三階段：前端 UI & 交互 ⏳ 待開始
 - [ ] 表單組件（StudentInfoForm、WisdomSelector、ToneSelector、EvaluationForm）
@@ -230,20 +234,27 @@ ADMIN_PASSWORD=your_secure_password
 
 ## 🚀 下一步行動
 
-### 立即待做（第二階段）
-1. ✅ 驗證 Prisma schema 正確性
-2. ✅ 執行資料庫遷移
+### 立即待做（第三階段）
+1. 📍 **現在：** 開發前端 UI 組件
    ```bash
-   npx prisma migrate dev --name init
+   # 組件清單：
+   - components/StudentInfoForm.tsx
+   - components/WisdomSelector.tsx
+   - components/ToneSelector.tsx
+   - components/EvaluationForm.tsx
+   - components/PromptPreview.tsx
+   - components/EvaluationResult.tsx
+   - components/EvaluationHistory.tsx
+   - components/WisdomManager.tsx
+   - components/ToneManager.tsx
    ```
-3. ✅ 驗證 Supabase 中表已創建
-4. 📍 **現在：** 實現 Gemini API 層（lib/gemini.ts）
-5. 📍 **接下來：** 實現 API 路由（/api/...）
+2. 集成 API 層到前端頁面
+3. 測試端到端流程
 
-### 後續（第三、四、五階段）
-- 開發前端組件和頁面
-- 進行本地測試
+### 後續（第四、五階段）
+- 進行本地和生產測試
 - 部署到 GitHub 和 Vercel
+- 設置 GitHub Actions CI/CD
 
 ---
 
@@ -311,12 +322,58 @@ return !!(
 
 ---
 
-**Last Updated:** 2026-04-06  
-**Project Status:** Phase 2 (In Progress)  
+**Last Updated:** 2026-04-06 (Phase 2 Complete ✅)  
+**Project Status:** Phase 3 Ready (UI & Components Development)  
 
-## 📋 已解決的 TypeScript 問題
+## 📋 已解決的問題歷史
+
+### TypeScript 類型問題
 
 | 日期 | 文件 | 問題 | 解決方案 |
 |------|------|------|----------|
 | 2026-04-06 | lib/prompts.ts | null vs undefined 類型不匹配 | 使用 `??` nullish coalescing 轉換 |
 | 2026-04-06 | lib/prompts.ts | 短路求值返回 boolean \| string | 使用 `!!` 強制轉換為 boolean |
+
+### Zod 驗證錯誤處理
+
+| 日期 | 文件 | 問題 | 解決方案 |
+|------|------|------|----------|
+| 2026-04-06 | 多個 API 路由 | ZodError 沒有 `.errors` 屬性 | 使用 `.issues` 替代（Zod v4+） |
+
+### 常見 TypeScript 錯誤與解決方案
+
+#### Q: TypeScript 報錯 "Property 'errors' does not exist on type 'ZodError'"？
+A: Zod v4+ 版本中，正確的屬性是 `.issues` 而不是 `.errors`。修正所有驗證錯誤處理：
+```typescript
+// 錯誤 ❌
+details: validation.error.errors
+
+// 正確 ✅
+details: validation.error.issues
+```
+
+#### Q: TypeScript 報錯 "Type 'string | null' is not assignable to type 'string | undefined'"？
+A: 這是 Prisma schema 中可選字段（`String?`）返回 `null` 而非 `undefined` 引起的。使用 nullish coalescing operator 轉換：
+```typescript
+// 錯誤 ❌
+toneDescription: tone.description
+
+// 正確 ✅
+toneDescription: tone.description ?? undefined
+```
+
+#### Q: TypeScript 報錯 "Type 'string | boolean' is not assignable to type 'boolean'"？
+A: 短路求值 (`condition &&`) 返回的不是純布爾值。使用雙感嘆號強制轉換：
+```typescript
+// 錯誤 ❌
+return (
+  prompt &&
+  prompt.length > 50
+)
+
+// 正確 ✅
+return !!(
+  prompt &&
+  prompt.length > 50
+)
+```

@@ -1,36 +1,231 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 期末評語生成系統 📚
 
-## Getting Started
+> **智能評語生成助手** — 使用 Gemini AI 快速為學生生成個性化期末評語
 
-First, run the development server:
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com)
+
+---
+
+## 📌 功能概述
+
+### 核心特性
+
+✨ **智能評語生成**
+- 教師輸入學生姓名、選擇四字箴言、選擇語氣預設
+- 系統自動生成高質量的 Gemini API prompt
+- 確認後調用 Gemini API 生成最終評語
+
+📊 **評語歷史管理**
+- 所有已生成評語自動保存至數據庫
+- 支持按學生名稱搜索和分頁查詢
+- 可查看完整評語記錄和生成的 prompt
+
+🎛️ **後台管理系統**
+- 動態管理四字箴言列表（增刪改查）
+- 動態管理語氣預設列表
+- 支持啟用/禁用箴言和語氣
+
+---
+
+## 🏗️ 技術棧
+
+- **React 19** + **Next.js 16 (App Router)**
+- **shadcn/ui** + **Tailwind CSS**
+- **Prisma 6** + **PostgreSQL (Supabase)**
+- **Google Gemini API**
+- **TypeScript 5** + **ESLint 9**
+
+---
+
+## 🚀 快速開始
+
+### 安裝
 
 ```bash
+# 1. 克隆項目
+git clone https://github.com/liutingli/academic-evaluation.git
+cd academic-evaluation
+
+# 2. 安裝依賴
+npm install
+
+# 3. 配置環境變量
+cp .env .env.local
+# 編輯 .env.local，填入 Gemini API Key 和 Supabase 連接字符串
+
+# 4. 初始化數據庫
+npx prisma migrate dev --name init
+npx prisma db seed
+
+# 5. 啟動開發服務器
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+訪問 http://localhost:3000 🎉
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 環境變量設置
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# Supabase PostgreSQL
+DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
 
-## Learn More
+# Gemini API
+GEMINI_API_KEY="your_api_key"
+NEXT_PUBLIC_GEMINI_MODEL="gemini-2.0-flash"
 
-To learn more about Next.js, take a look at the following resources:
+# 後台管理
+ADMIN_PASSWORD="secure_password"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📖 使用指南
 
-## Deploy on Vercel
+### 生成評語流程
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. 訪問首頁 → 填寫學生信息
+2. 選擇四字箴言 + 評語語氣
+3. 預覽自動生成的 prompt
+4. 確認後調用 Gemini API
+5. 評語自動保存到數據庫
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 後台管理 (密碼保護)
+
+訪問 http://localhost:3000/admin
+- 管理四字箴言
+- 管理語氣預設
+
+---
+
+## 🛠️ 常用命令
+
+```bash
+npm run dev      # 開發服務器
+npm run build    # 構建
+npm run lint     # 代碼檢查
+
+# 數據庫
+npx prisma migrate dev    # 創建遷移
+npx prisma db seed       # 填充初始數據
+npx prisma migrate reset # 重置數據庫
+npx prisma studio       # 打開數據庫管理界面
+```
+
+---
+
+## 📚 API 文檔
+
+### 生成 Prompt
+
+```
+POST /api/prompt/generate
+{
+  "studentName": "小明",
+  "wisdomIds": ["id1", "id2"],
+  "toneId": "id"
+}
+```
+
+### 生成評語
+
+```
+POST /api/evaluation/generate
+{
+  "prompt": "...",
+  "studentName": "小明",
+  "wisdomIds": ["id1"],
+  "toneId": "id"
+}
+```
+
+### 查詢歷史
+
+```
+GET /api/evaluations/list?page=1&pageSize=10
+```
+
+### 管理 API (需認證)
+
+```
+GET/POST/PATCH/DELETE /api/admin/wisdoms
+GET/POST/PATCH/DELETE /api/admin/tones
+```
+
+認證頭：`Authorization: Bearer your_admin_password`
+
+---
+
+## 📁 項目結構
+
+```
+app/
+├── api/                    # API 路由
+│   ├── prompt/generate     # 生成 prompt
+│   ├── evaluation/         # 生成評語
+│   ├── evaluations/        # 歷史查詢
+│   └── admin/              # 後台管理
+├── admin/                  # 管理後台頁面
+├── history/                # 歷史記錄頁面
+└── page.tsx                # 首頁
+
+components/                # React 組件
+lib/                       # 工具函數和 API 封裝
+prisma/                    # 數據庫配置
+```
+
+---
+
+## 📊 開發進度
+
+| 階段 | 狀態 | 內容 |
+|------|------|------|
+| 一 | ✅ | 項目初始化 |
+| 二 | ✅ | 數據層 & API 層 |
+| 三 | 🚧 | 前端 UI 組件 |
+| 四 | ⏳ | 測試 & 部署準備 |
+| 五 | ⏳ | Vercel 部署 |
+
+---
+
+## 📝 開發指南
+
+詳見 [.github/copilot-instrution.md](.github/copilot-instrution.md)
+
+---
+
+## 🚢 部署到 Vercel
+
+1. 推送到 GitHub
+2. 在 Vercel 導入倉庫
+3. 設置環境變量
+4. 自動部署完成
+
+---
+
+## 💡 常見問題
+
+**Q: 評語生成失敗？**
+- 檢查 GEMINI_API_KEY 是否正確
+- 查看終端日誌
+
+**Q: 數據庫連接失敗？**
+- 確認 DATABASE_URL 和 DIRECT_URL 正確
+- 檢查網絡連接
+
+**Q: 後台密碼忘記？**
+- 修改 .env.local 中的 ADMIN_PASSWORD
+
+---
+
+## 📧 聯繫方式
+
+- Email — lily90740@gmail.com
+
+---
+
+**最後更新：** 2026-04-06  
+**狀態：** Phase 2 Complete ✅
