@@ -15,7 +15,7 @@ export const geminiModel = genAI.getGenerativeModel({
 });
 
 /**
- * 調用 Gemini API 生成評語
+ * 呼叫 Gemini API 生成評語
  * @param prompt - 發送給 Gemini 的 prompt
  * @returns 生成的評語內容
  */

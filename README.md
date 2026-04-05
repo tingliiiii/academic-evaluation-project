@@ -16,10 +16,10 @@
 ✨ **智能評語生成**
 - 教師輸入學生姓名、選擇四字箴言、選擇語氣預設
 - 系統自動生成高質量的 Gemini API prompt
-- 確認後調用 Gemini API 生成最終評語
+- 確認後呼叫 Gemini API 生成最終評語
 
 📊 **評語歷史管理**
-- 所有已生成評語自動保存至數據庫
+- 所有已生成評語自動儲存至資料庫
 - 支持按學生名稱搜索和分頁查詢
 - 可查看完整評語記錄和生成的 prompt
 
@@ -30,7 +30,7 @@
 
 ---
 
-## 🏗️ 技術棧
+## 🏗️ 技術堆疊
 
 - **React 19** + **Next.js 16 (App Router)**
 - **shadcn/ui** + **Tailwind CSS**
@@ -45,28 +45,28 @@
 ### 安裝
 
 ```bash
-# 1. 克隆項目
+# 1. 克隆專案
 git clone https://github.com/liutingli/academic-evaluation.git
 cd academic-evaluation
 
-# 2. 安裝依賴
+# 2. 安裝套件
 npm install
 
-# 3. 配置環境變量
+# 3. 設定環境變數
 cp .env .env.local
-# 編輯 .env.local，填入 Gemini API Key 和 Supabase 連接字符串
+# 編輯 .env.local，填入 Gemini API Key 和 Supabase 連線字符串
 
-# 4. 初始化數據庫
+# 4. 初始化資料庫
 npx prisma migrate dev --name init
 npx prisma db seed
 
-# 5. 啟動開發服務器
+# 5. 啟動開發伺服器
 npm run dev
 ```
 
 訪問 http://localhost:3000 🎉
 
-### 環境變量設置
+### 環境變數設置
 
 ```env
 # Supabase PostgreSQL
@@ -87,11 +87,11 @@ ADMIN_PASSWORD="secure_password"
 
 ### 生成評語流程
 
-1. 訪問首頁 → 填寫學生信息
+1. 訪問首頁 → 填寫學生資訊
 2. 選擇四字箴言 + 評語語氣
 3. 預覽自動生成的 prompt
-4. 確認後調用 Gemini API
-5. 評語自動保存到數據庫
+4. 確認後呼叫 Gemini API
+5. 評語自動儲存到資料庫
 
 ### 後台管理 (密碼保護)
 
@@ -104,20 +104,20 @@ ADMIN_PASSWORD="secure_password"
 ## 🛠️ 常用命令
 
 ```bash
-npm run dev      # 開發服務器
+npm run dev      # 開發伺服器
 npm run build    # 構建
-npm run lint     # 代碼檢查
+npm run lint     # 程式碼檢查
 
-# 數據庫
-npx prisma migrate dev    # 創建遷移
-npx prisma db seed       # 填充初始數據
-npx prisma migrate reset # 重置數據庫
-npx prisma studio       # 打開數據庫管理界面
+# 資料庫
+npx prisma migrate dev    # 建立遷移
+npx prisma db seed       # 填充初始資料
+npx prisma migrate reset # 重置資料庫
+npx prisma studio       # 打開資料庫管理介面
 ```
 
 ---
 
-## 📚 API 文檔
+## 📚 API 文件
 
 ### 生成 Prompt
 
@@ -159,7 +159,7 @@ GET/POST/PATCH/DELETE /api/admin/tones
 
 ---
 
-## 📁 項目結構
+## 📁 專案結構
 
 ```
 app/
@@ -172,9 +172,9 @@ app/
 ├── history/                # 歷史記錄頁面
 └── page.tsx                # 首頁
 
-components/                # React 組件
-lib/                       # 工具函數和 API 封裝
-prisma/                    # 數據庫配置
+components/                # React 元件
+lib/                       # 工具函式和 API 封裝
+prisma/                    # 資料庫設定
 ```
 
 ---
@@ -183,9 +183,9 @@ prisma/                    # 數據庫配置
 
 | 階段 | 狀態 | 內容 |
 |------|------|------|
-| 一 | ✅ | 項目初始化 |
-| 二 | ✅ | 數據層 & API 層 |
-| 三 | 🚧 | 前端 UI 組件 |
+| 一 | ✅ | 專案初始化 |
+| 二 | ✅ | 資料層 & API 層 |
+| 三 | 🚧 | 前端 UI 元件 |
 | 四 | ⏳ | 測試 & 部署準備 |
 | 五 | ⏳ | Vercel 部署 |
 
@@ -201,7 +201,7 @@ prisma/                    # 數據庫配置
 
 1. 推送到 GitHub
 2. 在 Vercel 導入倉庫
-3. 設置環境變量
+3. 設置環境變數
 4. 自動部署完成
 
 ---
@@ -212,9 +212,9 @@ prisma/                    # 數據庫配置
 - 檢查 GEMINI_API_KEY 是否正確
 - 查看終端日誌
 
-**Q: 數據庫連接失敗？**
+**Q: 資料庫連線失敗？**
 - 確認 DATABASE_URL 和 DIRECT_URL 正確
-- 檢查網絡連接
+- 檢查網絡連線
 
 **Q: 後台密碼忘記？**
 - 修改 .env.local 中的 ADMIN_PASSWORD

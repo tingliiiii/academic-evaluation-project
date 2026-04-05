@@ -41,10 +41,10 @@ export async function GET(request: NextRequest) {
       };
     }
 
-    // 獲取總數
+    // 取得總數
     const total = await prisma.evaluation.count({ where });
 
-    // 獲取分頁的評語列表
+    // 取得分頁的評語列表
     const evaluations = await prisma.evaluation.findMany({
       where,
       include: {

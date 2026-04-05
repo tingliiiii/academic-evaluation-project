@@ -30,11 +30,11 @@ export async function POST(request: NextRequest) {
 
     const { prompt, studentName, wisdomIds, toneId } = validation.data;
 
-    // 1. 調用 Gemini API
+    // 1. 呼叫 Gemini API
     const content = await generateEvaluation(prompt);
 
-    // 2. 保存到數據庫
-    // 2.1 找或創建學生
+    // 2. 儲存到資料庫
+    // 2.1 找或建立學生
     let student = await prisma.student.findFirst({
       where: { name: studentName },
     });
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // 2.2 創建評語記錄
+    // 2.2 建立評語記錄
     const evaluation = await prisma.evaluation.create({
       data: {
         studentId: student.id,

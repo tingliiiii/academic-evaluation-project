@@ -1,7 +1,7 @@
 // lib/types.ts
 import type { Prisma } from "@prisma/client";
 
-// API 請求/響應類型
+// API 請求/響應型別
 export interface EvaluationRequest {
   studentName: string;
   wisdomIds: string[];
@@ -46,7 +46,7 @@ export interface ToneCreateRequest {
   description?: string;
 }
 
-// 數據庫模型類型（從 Prisma 自動生成）
+// 資料庫模型型別（從 Prisma 自動生成）
 export type Wisdom = Prisma.WisdomGetPayload<{}>;
 export type Tone = Prisma.ToneGetPayload<{}>;
 export type Student = Prisma.StudentGetPayload<{}>;

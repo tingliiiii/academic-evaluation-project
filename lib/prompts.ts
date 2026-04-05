@@ -17,7 +17,7 @@ export interface PromptTemplateResult {
 }
 
 /**
- * 從數據庫獲取四字箴言和語氣，生成 Prompt
+ * 從資料庫取得四字箴言和語氣，生成 Prompt
  */
 export async function generatePromptTemplate(
   params: PromptTemplateParams
@@ -37,7 +37,7 @@ export async function generatePromptTemplate(
     throw new Error("Tone is required");
   }
 
-  // 從數據庫獲取選中的箴言
+  // 從資料庫取得選中的箴言
   const wisdoms = await prisma.wisdom.findMany({
     where: {
       id: {
@@ -51,7 +51,7 @@ export async function generatePromptTemplate(
     throw new Error("Selected wisdoms not found or are inactive");
   }
 
-  // 從數據庫獲取語氣
+  // 從資料庫取得語氣
   const tone = await prisma.tone.findUnique({
     where: { id: toneId },
   });
