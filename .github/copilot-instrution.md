@@ -283,7 +283,40 @@ npx prisma migrate reset  # 清空所有表並重新執行遷移
 ### Q: 本地開發時環境變量加載失敗？
 A: 確認 `.env.local` 存在且正確設置。重啟開發服務器。
 
+### Q: TypeScript 報錯 "Type 'string | null' is not assignable to type 'string | undefined'"？
+A: 這是 Prisma schema 中可選字段（`String?`）返回 `null` 而非 `undefined` 引起的。使用 nullish coalescing operator 轉換：
+```typescript
+// 錯誤 ❌
+toneDescription: tone.description
+
+// 正確 ✅
+toneDescription: tone.description ?? undefined
+```
+
+### Q: TypeScript 報錯 "Type 'string | boolean' is not assignable to type 'boolean'"？
+A: 短路求值 (`condition &&`) 返回的不是純布爾值。使用雙感嘆號強制轉換：
+```typescript
+// 錯誤 ❌
+return (
+  prompt &&
+  prompt.length > 50
+)
+
+// 正確 ✅
+return !!(
+  prompt &&
+  prompt.length > 50
+)
+```
+
 ---
 
 **Last Updated:** 2026-04-06  
-**Project Status:** Phase 2 (In Progress)
+**Project Status:** Phase 2 (In Progress)  
+
+## 📋 已解決的 TypeScript 問題
+
+| 日期 | 文件 | 問題 | 解決方案 |
+|------|------|------|----------|
+| 2026-04-06 | lib/prompts.ts | null vs undefined 類型不匹配 | 使用 `??` nullish coalescing 轉換 |
+| 2026-04-06 | lib/prompts.ts | 短路求值返回 boolean \| string | 使用 `!!` 強制轉換為 boolean |
