@@ -4,12 +4,86 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// prisma/schema.prisma
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// 四字箴言表
+model Wisdom {
+  id        String   @id @default(cuid())
+  content   String   @unique
+  isActive  Boolean  @default(true)
+  priority  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  evaluations EvaluationWisdom[]
+
+  @@map("wisdoms")
+}
+
+// 語氣表
+model Tone {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  evaluations Evaluation[]
+
+  @@map("tones")
+}
+
+// 學生表
+model Student {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  evaluations Evaluation[]
+
+  @@map("students")
+}
+
+// 評語記錄表
+model Evaluation {
+  id        String   @id @default(cuid())
+  studentId String
+  toneId    String
+  content   String   @db.Text
+  prompt    String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  tone    Tone    @relation(fields: [toneId], references: [id])
+
+  wisdoms EvaluationWisdom[]
+
+  @@index([studentId])
+  @@index([toneId])
+  @@index([createdAt])
+  @@map("evaluations")
+}
+
+// 評語與箴言的多對多關係
+model EvaluationWisdom {
+  evaluationId String
+  wisdomId     String
+
+  evaluation Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  wisdom     Wisdom     @relation(fields: [wisdomId], references: [id], onDelete: Cascade)
+
+  @@id([evaluationId, wisdomId])
+  @@map("evaluation_wisdoms")
 }
