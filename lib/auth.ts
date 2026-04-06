@@ -4,7 +4,6 @@
  */
 
 const STORAGE_KEY = 'academic_eval_auth';
-const TEACHER_PASSWORD = process.env.NEXT_PUBLIC_TEACHER_PASSWORD || 'teacher123';
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -34,22 +33,33 @@ export function getAuthState(): AuthState {
 }
 
 /**
- * 執行登入
+ * 執行登入：非同步 (async) 呼叫後端 API 進行驗證
  * @param password - 用戶輸入的密碼
  * @returns 是否登入成功
  */
-export function login(password: string): boolean {
-  if (password === TEACHER_PASSWORD) {
-    const authState: AuthState = {
-      isLoggedIn: true,
-      loginTime: Date.now(),
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(authState));
-    return true;
-  }
-  return false;
-}
+export async function login(password: string): Promise<boolean> {
+  try {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
 
+    if (response.ok) {
+      const authState: AuthState = {
+        isLoggedIn: true,
+        loginTime: Date.now(),
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(authState));
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error("Login failed:", error);
+    return false;
+  }
+}
 /**
  * 執行登出
  */

@@ -21,7 +21,6 @@ export function useAuth(): AuthContextValue {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // 僅在客戶端執行
     const state = getAuthState();
     setIsLoggedIn(state.isLoggedIn);
     setMounted(true);
@@ -32,7 +31,6 @@ export function useAuth(): AuthContextValue {
     setIsLoggedIn(false);
   }, []);
 
-  // 在未 mount 前返回未登入狀態（避免 hydration 錯誤）
   return {
     isLoggedIn: mounted ? isLoggedIn : false,
     logout,
@@ -54,15 +52,12 @@ export function useAuthLogin(): UseAuthLoginResult {
     setError(null);
 
     try {
-      // 模擬網路延遲
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      const success = authLogin(password);
+      const success = await authLogin(password); 
+      
       if (!success) {
         setError('密碼錯誤，請重試');
         return false;
       }
-
       return true;
     } catch (err) {
       const message = err instanceof Error ? err.message : '登入失敗';
@@ -96,8 +91,10 @@ export function useFetchWisdoms(): UseFetchWisdomsResult {
       try {
         setLoading(true);
         const response = await fetch('/api/admin/wisdoms');
+        // 嘗試解析後端回傳的錯誤訊息
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         setWisdoms(data.data || []);
@@ -136,7 +133,8 @@ export function useFetchTones(): UseFetchTonesResult {
         setLoading(true);
         const response = await fetch('/api/admin/tones');
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         setTones(data.data || []);
@@ -199,15 +197,16 @@ export function useGeneratePrompt(): UseGeneratePromptResult {
         const response = await fetch('/api/prompt/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            studentName,
-            wisdomIds,
-            toneId,
+          body: JSON.stringify({ 
+            studentName, 
+            wisdomIds, 
+            toneId
           }),
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
@@ -218,8 +217,7 @@ export function useGeneratePrompt(): UseGeneratePromptResult {
           toneName,
         });
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Prompt 生成失敗';
+        const message = err instanceof Error ? err.message : 'Prompt 生成失敗';
         setError(message);
       } finally {
         setLoading(false);
@@ -285,7 +283,8 @@ export function useGenerateEvaluation(): UseGenerateEvaluationResult {
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
@@ -363,7 +362,8 @@ export function useFetchEvaluations(
           `/api/evaluation/generate/list?${params.toString()}`
         );
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();

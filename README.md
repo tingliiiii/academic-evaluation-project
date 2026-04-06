@@ -1,6 +1,6 @@
 # 期末評語生成系統 📚
 
-> **智能評語生成助手** — 使用 Gemini AI 快速為學生生成個性化期末評語
+> **生成期末評語小幫手** — 使用 Gemini AI 快速生成學生期末評語
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
@@ -13,9 +13,9 @@
 
 ### 核心特性
 
-✨ **智能評語生成**
+✨ **快速生成評語**
 - 教師輸入學生姓名、選擇四字箴言、選擇語氣預設
-- 系統自動生成高質量的 Gemini API prompt
+- 系統自動生成高品質的 Gemini API prompt
 - 確認後呼叫 Gemini API 生成最終評語
 
 📊 **評語歷史管理**
@@ -75,7 +75,7 @@ DIRECT_URL="postgresql://..."
 
 # Gemini API
 GEMINI_API_KEY="your_api_key"
-NEXT_PUBLIC_GEMINI_MODEL="gemini-2.0-flash"
+NEXT_PUBLIC_GEMINI_MODEL="gemini-2.5-flash"
 
 # 後台管理
 ADMIN_PASSWORD="secure_password"
@@ -217,7 +217,7 @@ prisma/                    # 資料庫設定
 - 檢查網絡連線
 
 **Q: 後台密碼忘記？**
-- 修改 .env.local 中的 ADMIN_PASSWORD
+- 修改 .env 中的 ADMIN_PASSWORD
 
 ---
 

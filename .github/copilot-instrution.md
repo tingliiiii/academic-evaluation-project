@@ -225,8 +225,8 @@ DATABASE_URL=postgresql://...pooler.supabase.com:6543/...
 DIRECT_URL=postgresql://...pooler.supabase.com:5432/...
 
 # Gemini API
-GEMINI_API_KEY=AIzaSy...
-NEXT_PUBLIC_GEMINI_MODEL=gemini-2.0-flash
+GEMINI_API_KEY=your_api_key
+NEXT_PUBLIC_GEMINI_MODEL=gemini-2.5-flash
 
 # 後台管理
 ADMIN_PASSWORD=your_password

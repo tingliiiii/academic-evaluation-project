@@ -59,7 +59,7 @@ export default function LoginPage() {
               期末評語生成系統
             </h1>
             <p className="text-sm text-slate-500">
-              智能評語生成助手，為教師節省時間
+              我是生成期末評語小幫手
             </p>
           </div>
 
@@ -71,12 +71,12 @@ export default function LoginPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-slate-700 mb-2"
               >
-                教師密碼
+                密碼
               </label>
               <input
                 id="password"
                 type="password"
-                placeholder="輸入教師密碼"
+                placeholder="輸入密碼"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
@@ -105,7 +105,7 @@ export default function LoginPage() {
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-slate-200 text-center">
             <p className="text-xs text-slate-500">
-              僅供教師使用 | 如遺忘密碼請聯繫管理員
+              忘記密碼請聯繫管理員
             </p>
           </div>
         </div>

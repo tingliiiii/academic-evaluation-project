@@ -37,24 +37,25 @@ export async function generatePromptTemplate(
     throw new Error("Tone is required");
   }
 
-  // 從資料庫取得選中的箴言
-  const wisdoms = await prisma.wisdom.findMany({
-    where: {
-      id: {
-        in: wisdomIds,
+  // ✅ 使用 Promise.all 並行執行兩個獨立的查詢
+  // 這避免了瀑布效應，提升性能
+  const [wisdoms, tone] = await Promise.all([
+    prisma.wisdom.findMany({
+      where: {
+        id: {
+          in: wisdomIds,
+        },
+        isActive: true,
       },
-      isActive: true,
-    },
-  });
+    }),
+    prisma.tone.findUnique({
+      where: { id: toneId },
+    }),
+  ]);
 
   if (wisdoms.length === 0) {
     throw new Error("Selected wisdoms not found or are inactive");
   }
-
-  // 從資料庫取得語氣
-  const tone = await prisma.tone.findUnique({
-    where: { id: toneId },
-  });
 
   if (!tone || !tone.isActive) {
     throw new Error("Selected tone not found or is inactive");
@@ -124,18 +125,30 @@ ${toneDescription ? `具體要求：${toneDescription}` : ""}
 
 /**
  * 驗證 Prompt 格式是否正確
+ * ✅ 改進：不再依賴脆弱的字符串搜尋，而是驗證實際的內容變數
+ * @param prompt - 生成的 Prompt
+ * @param studentName - 學生姓名（應該已插入到 Prompt 中）
+ * @param wisdomTexts - 四字箴言文字（應該已插入到 Prompt 中）
+ * @returns 是否有效
  */
-export function validatePrompt(prompt: string): boolean {
-  return !!(
-    prompt &&
-    prompt.length > 50 && // 最少字數
-    prompt.includes("學生姓名") &&
-    prompt.includes("四字箴言")
-  );
-}
+export function validatePrompt(
+  prompt: string,
+  studentName?: string,
+  wisdomTexts?: string
+): boolean {
+  // 基本檢查
+  if (!prompt || prompt.length < 50) {
+    return false;
+  }
 
-export default {
-  generatePromptTemplate,
-  buildEvaluationPrompt,
-  validatePrompt,
-};
+  // 如果提供了具體值，驗證這些值是否已成功插入
+  if (studentName && !prompt.includes(studentName)) {
+    return false;
+  }
+  if (wisdomTexts && !prompt.includes(wisdomTexts)) {
+    return false;
+  }
+
+  // 確保 Prompt 包含基本的結構（模板標籤）
+  return prompt.includes("【學生姓名】") && prompt.includes("【評語重點");
+}
