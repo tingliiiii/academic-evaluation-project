@@ -44,7 +44,6 @@ export function WisdomSelector() {
         <div className="space-y-4">
           <Label>選擇箴言（多選）</Label>
           
-          {/* 裝載選項的微凹槽底盤 */}
           <div className="p-4 sm:p-6 rounded-[32px] bg-[#F4F1FA] shadow-clay-pressed space-y-4">
             {wisdoms.map((wisdom) => {
               const isChecked = field.value?.includes(wisdom.id) || false;
@@ -54,11 +53,10 @@ export function WisdomSelector() {
                   key={wisdom.id}
                   className={`flex items-center gap-4 cursor-pointer p-5 rounded-[20px] transition-all duration-300 select-none ${
                     isChecked
-                      ? 'bg-[#EFEBF5] shadow-clay-pressed scale-[0.98]' // 選中時凹陷並稍微縮小
-                      : 'bg-white shadow-clay-btn hover:-translate-y-1 hover:shadow-clay-btn-hover' // 未選時浮起
+                      ? 'bg-[#EFEBF5] shadow-clay-pressed scale-[0.98]' 
+                      : 'bg-white shadow-clay-btn hover:-translate-y-1 hover:shadow-clay-btn-hover' 
                   }`}
                 >
-                  {/* 隱藏原生 checkbox */}
                   <input
                     type="checkbox"
                     className="sr-only"
@@ -72,7 +70,6 @@ export function WisdomSelector() {
                     }}
                   />
                   
-                  {/* 自訂的黏土核取圓圈 */}
                   <div className={`w-7 h-7 rounded-full flex-shrink-0 transition-all duration-300 flex items-center justify-center ${
                     isChecked ? 'bg-clay-accent shadow-inner' : 'bg-[#EFEBF5] shadow-clay-pressed'
                   }`}>
@@ -80,7 +77,8 @@ export function WisdomSelector() {
                   </div>
 
                   <div className="flex-1">
-                    <p className={`text-base font-bold transition-colors ${isChecked ? 'text-clay-accent' : 'text-clay-foreground'}`}>
+                    {/* 顯示 wisdom.content (品學兼優) 而不是 wisdom.id */}
+                    <p className={`text-xl font-heading font-black tracking-widest transition-colors ${isChecked ? 'text-clay-accent' : 'text-clay-foreground'}`}>
                       {wisdom.content}
                     </p>
                   </div>
