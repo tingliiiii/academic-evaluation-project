@@ -113,7 +113,64 @@ npx prisma migrate dev    # 建立遷移
 npx prisma db seed       # 填充初始資料
 npx prisma migrate reset # 重置資料庫
 npx prisma studio       # 打開資料庫管理介面
+
+# 測試
+npm run test             # 運行所有測試
+npm run test:watch      # 監視模式
+npm run test:coverage   # 生成覆蓋率報告
 ```
+
+---
+
+## 🧪 測試和文檔
+
+### 📖 完整文檔
+
+查看 **[TEST_AND_API_GUIDE.md](/docs/TEST_AND_API_GUIDE.md)** 獲得詳細說明：
+- 📊 如何查看 OpenAPI 文檔和 Swagger UI
+- 🧪 如何運行各種測試
+- 📋 完整的 API 参考
+- 🔧 故障排除指南
+
+### 快速開始測試
+
+```bash
+# 運行所有測試
+npm run test
+
+# 運行特定類型的測試
+npm run test:api           # API 測試 (24 個測試)
+npm run test:components    # 組件測試 (250+ 個測試)
+npm run test:integration   # 集成測試 (60+ 個測試)
+
+# 生成覆蓋率報告
+npm run test:coverage
+```
+
+### 查看 API 文檔 (Swagger UI)
+
+1. **啟動開發伺服器**
+   ```bash
+   npm run dev
+   ```
+
+2. **訪問 Swagger UI**
+   - 打開 http://localhost:3000/swagger.html
+   - 查看所有 API 端點的交互式文檔
+   - 直接在界面上測試 API
+
+3. **查看 OpenAPI 規範**
+   - JSON 格式：http://localhost:3000/api/docs
+   - 源代碼：[lib/openapi.ts](lib/openapi.ts)
+
+### 測試覆蓋
+
+| 類別 | 檔案數 | 測試項 | 覆蓋範圍 |
+|-----|------|------|--------|
+| **API** | 1 | 24 | 7 個端點、驗證、錯誤處理 |
+| **組件** | 5 | 250+ | UI 邏輯、驗證、事件、狀態 |
+| **集成** | 1 | 60+ | 完整工作流程、多步驟操作 |
+| **總計** | **7** | **334+** | **全棧覆蓋** |
 
 ---
 

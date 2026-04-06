@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>期末評語生成系統 - API 文檔</title>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@3/swagger-ui.css"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .swagger-ui {
+            max-width: 100%;
+        }
+
+        /* 自定义 Swagger UI 顏色 */
+        .topbar {
+            background-color: #1976d2;
+        }
+
+        .swagger-ui .topbar {
+            padding: 10px 0;
+        }
+
+        .swagger-ui .topbar-title {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* 代碼高亮 */
+        .swagger-ui .model-example {
+            background-color: #f5f5f5;
+        }
+
+        /* 按鈕樣式 */
+        .swagger-ui .btn {
+            border-radius: 4px;
+        }
+
+        .swagger-ui .btn.execute {
+            background-color: #1976d2;
+            border-color: #1976d2;
+        }
+
+        .swagger-ui .btn.execute:hover {
+            background-color: #1565c0;
+        }
+
+        /* 響應代碼顏色 */
+        .swagger-ui .response-col_status {
+            font-weight: bold;
+        }
+
+        .swagger-ui .models {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    
+    <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@3/swagger-ui-standalone-preset.js"></script>
+    
+    <script>
+        const ui = SwaggerUIBundle({
+            // API 規範 URL
+            url: '/api/docs',
+            
+            // DOM 選擇器
+            dom_id: '#swagger-ui',
+            
+            // 預設設置
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset,
+            ],
+            
+            // 插件
+            plugins: [
+                SwaggerUIBundle.plugins.DownloadUrl,
+            ],
+            
+            // UI 配置
+            layout: 'BaseLayout',
+            deepLinking: true,
+            
+            // 自訂選項
+            filter: true,
+            showRequestHeaders: true,
+            defaultModelsExpandDepth: 1,
+            defaultModelExpandDepth: 1,
+            docExpansion: 'list',
+            
+            // 驗證
+            validatorUrl: null,
+            
+            // 初始化完成後
+            onComplete: function() {
+                console.log('Swagger UI 已加載');
+                document.querySelector('.topbar-title').innerHTML = '期末評語生成系統 API 文檔';
+            },
+        });
+
+        // 導出全局 ui 對象
+        window.ui = ui;
+    </script>
+</body>
+</html>

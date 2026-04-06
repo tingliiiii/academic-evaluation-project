@@ -1,4 +1,16 @@
-// app/api/evaluations/route.ts
+/**
+ * app/api/evaluations/route.ts
+ * 
+ * 評語管理 API 端點
+ * 
+ * 支援：
+ * - POST: 生成新的評語（需要提示詞）
+ * - GET: 取得評語列表（支援分頁和搜尋）
+ * 
+ * @requires 認證：Bearer token (ADMIN_PASSWORD)
+ * @requires 請求頭：Content-Type: application/json
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { generateEvaluation } from "@/lib/gemini";
 import prisma from "@/lib/prisma";
@@ -18,6 +30,46 @@ import {
 // POST: 新增評語 
 // ============================================================================
 
+/**
+ * 生成評語 (POST /api/evaluations)
+ * 
+ * @async
+ * @param {NextRequest} request - HTTP 請求
+ * @param {Object} request.body - 請求體
+ * @param {string} request.body.studentName - 學生姓名 (2-10字)
+ * @param {string} request.body.toneId - 語氣ID
+ * @param {string[]} request.body.wisdomIds - 箴言ID列表 (至少1個)
+ * @param {string} request.body.prompt - Gemini API 提示詞 (至少50字)
+ * 
+ * @returns {Promise<NextResponse>}
+ * @returns {201} 評語生成成功，返回評語ID和內容
+ * @returns {400} 驗證失敗或業務規則違反
+ * @returns {401} 未授權
+ * @returns {500} 伺服器錯誤（Gemini API 或資料庫錯誤）
+ * 
+ * @example
+ * POST /api/evaluations
+ * Content-Type: application/json
+ * Authorization: Bearer <token>
+ * 
+ * {
+ *   "studentName": "張三",
+ *   "toneId": "tone_001",
+ *   "wisdomIds": ["wisdom_001", "wisdom_002"],
+ *   "prompt": "..."
+ * }
+ * 
+ * Response (201):
+ * {
+ *   "success": true,
+ *   "data": {
+ *     "id": "eval_123",
+ *     "studentName": "張三",
+ *     "content": "...",
+ *     "createdAt": "2026-04-06T10:00:00Z"
+ *   }
+ * }
+ */
 async function handlePost(request: NextRequest) {
   try {
     // 1. 解析和驗證請求體
@@ -144,6 +196,50 @@ async function handlePost(request: NextRequest) {
 // GET: 取得評語列表
 // ============================================================================
 
+/**
+ * 取得評語列表 (GET /api/evaluations)
+ * 
+ * 支援分頁、搜尋和排序
+ * 
+ * @async
+ * @param {NextRequest} request - HTTP 請求
+ * @param {Object} request.query - 查詢參數
+ * @param {number} [request.query.page=1] - 頁碼（最小1）
+ * @param {number} [request.query.pageSize=10] - 每頁數量（1-100）
+ * @param {string} [request.query.studentName] - 學生名稱搜尋（模糊搜尋）
+ * 
+ * @returns {Promise<NextResponse>}
+ * @returns {200} 成功取得列表，返回分頁資料
+ * @returns {400} 查詢參數驗證失敗
+ * @returns {401} 未授權
+ * @returns {500} 伺服器錯誤
+ * 
+ * @example
+ * GET /api/evaluations?page=1&pageSize=10&studentName=張
+ * Authorization: Bearer <token>
+ * 
+ * Response (200):
+ * {
+ *   "success": true,
+ *   "data": {
+ *     "items": [
+ *       {
+ *         "id": "eval_123",
+ *         "studentName": "張三",
+ *         "toneName": "溫和",
+ *         "wisdoms": ["箴言1", "箴言2"],
+ *         "createdAt": "2026-04-06T10:00:00Z"
+ *       }
+ *     ],
+ *     "pagination": {
+ *       "page": 1,
+ *       "pageSize": 10,
+ *       "total": 100,
+ *       "totalPages": 10
+ *     }
+ *   }
+ * }
+ */
 async function handleGet(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
