@@ -1,9 +1,29 @@
-// app/api/prompt/generate/route.ts
+/**
+ * POST /api/prompts/preview
+ * 生成評語提示詞預覽（不保存到資料庫）
+ * 
+ * 請求：
+ *   - studentName: 學生姓名
+ *   - wisdomIds: 箴言 ID 陣列
+ *   - toneId: 語氣 ID
+ * 
+ * 響應：
+ *   {
+ *     success: true,
+ *     data: {
+ *       prompt: "生成的提示詞文本...",
+ *       metadata: {
+ *         wisdoms: ["箴言1", "箴言2"],
+ *         selectedWisdomCount: 2
+ *       }
+ *     }
+ *   }
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { generatePromptTemplate, validatePrompt } from "@/lib/prompts";
 import { z } from "zod";
 
-// 驗證請求 schema
 const requestSchema = z.object({
   studentName: z.string().min(1, "Student name is required"),
   wisdomIds: z.array(z.string().min(1)).min(1, "At least one wisdom must be selected"),
@@ -49,7 +69,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error generating prompt:", error);
+    console.error("Error generating prompt preview:", error);
 
     const message =
       error instanceof Error ? error.message : "Failed to generate prompt";

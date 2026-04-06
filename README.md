@@ -119,38 +119,65 @@ npx prisma studio       # 打開資料庫管理介面
 
 ## 📚 API 文件
 
-### 生成 Prompt
+### 1️⃣ 生成 Prompt 預覽
 
-```
-POST /api/prompt/generate
+```bash
+POST /api/prompts/preview
+
 {
   "studentName": "小明",
   "wisdomIds": ["id1", "id2"],
   "toneId": "id"
 }
+
+Response:
+{
+  "success": true,
+  "data": {
+    "prompt": "完整的評語提示詞...",
+    "metadata": {...}
+  }
+}
 ```
 
-### 生成評語
+### 2️⃣ 生成評語
 
-```
-POST /api/evaluation/generate
+```bash
+POST /api/evaluations
+
 {
   "prompt": "...",
   "studentName": "小明",
   "wisdomIds": ["id1"],
   "toneId": "id"
 }
+
+Response: {評語記錄}
 ```
 
-### 查詢歷史
+### 3️⃣ 查詢歷史
 
+```bash
+GET /api/evaluations?page=1&pageSize=10&studentName=小明
 ```
-GET /api/evaluations/list?page=1&pageSize=10
+
+### 4️⃣ 取得單筆評語
+
+```bash
+GET /api/evaluations/[id]
+```
+
+### 5️⃣ 刪除評語
+
+```bash
+DELETE /api/evaluations/[id]
+
+Authorization: Bearer {ADMIN_PASSWORD}
 ```
 
 ### 管理 API (需認證)
 
-```
+```bash
 GET/POST/PATCH/DELETE /api/admin/wisdoms
 GET/POST/PATCH/DELETE /api/admin/tones
 ```
@@ -163,11 +190,16 @@ GET/POST/PATCH/DELETE /api/admin/tones
 
 ```
 app/
-├── api/                    # API 路由
-│   ├── prompt/generate     # 生成 prompt
-│   ├── evaluation/         # 生成評語
-│   ├── evaluations/        # 歷史查詢
-│   └── admin/              # 後台管理
+├── api/                    # API 路由 (RESTful)
+│   ├── prompts/
+│   │   └── preview/        # POST: 生成 prompt 預覽
+│   ├── evaluations/        
+│   │   ├── route.ts        # GET: 列表 / POST: 新增
+│   │   └── [id]/route.ts   # GET: 詳情 / DELETE: 刪除
+│   ├── admin/              # 後台管理
+│   │   ├── wisdoms/
+│   │   └── tones/
+│   └── auth/               # 認證
 ├── admin/                  # 管理後台頁面
 ├── history/                # 歷史記錄頁面
 └── page.tsx                # 首頁

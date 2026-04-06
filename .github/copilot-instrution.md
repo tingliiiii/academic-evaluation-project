@@ -30,6 +30,94 @@
 
 ---
 
+## 📁 專案結構
+
+```text
+academic-evaluation/
+├── app/
+│   ├── layout.tsx                  # 布局
+│   ├── page.tsx                    # 首頁（評語生成表單）
+│   ├── globals.css                 # 全域樣式
+│   ├── api/
+│   │   ├── prompt/
+│   │   │   └── generate/route.ts   # 生成 prompt 預覽
+│   │   ├── evaluation/
+│   │   │   └── generate/route.ts   # 生成評語（呼叫 Gemini）
+│   │   ├── evaluations/
+│   │   │   ├── list/route.ts       # 取得評語列表
+│   │   │   └── [id]/route.ts       # 取得評語詳情
+│   │   └── admin/
+│   │       ├── wisdoms/route.ts    # 箴言 CRUD
+│   │       └── tones/route.ts      # 語氣 CRUD
+│   ├── history/
+│   │   └── page.tsx                # 評語歷史頁面
+│   └── admin/
+│       ├── page.tsx                # 後台管理首頁
+│       ├── wisdoms/page.tsx        # 四字箴言管理
+│       ├── tones/page.tsx          # 語氣管理
+│       └── layout.tsx              # 後台佈局
+├── components/
+│   ├── ui/                         # shadcn/ui 元件
+│   ├── StudentInfoForm.tsx         # 學生資訊輸入
+│   ├── WisdomSelector.tsx          # 箴言選擇器
+│   ├── ToneSelector.tsx            # 語氣選擇器
+│   ├── EvaluationForm.tsx          # 整合表單
+│   ├── PromptPreview.tsx           # Prompt 預覽
+│   ├── EvaluationResult.tsx        # 評語展示
+│   ├── EvaluationHistory.tsx       # 歷史列表
+│   ├── WisdomManager.tsx           # 箴言管理元件
+│   └── ToneManager.tsx             # 語氣管理元件
+├── lib/
+│   ├── types.ts                    # TypeScript 型別定義
+│   ├── gemini.ts                   # Gemini API 封裝
+│   ├── prompts.ts                  # Prompt 模板引擎
+│   ├── prisma.ts                   # Prisma Client 實例
+│   └── utils.ts                    # 工具函式
+├── prisma/
+│   ├── schema.prisma               # Prisma 資料模型
+│   ├── seed.ts                     # 初始化腳本
+│   └── migrations/                 # 資料庫遷移記錄
+├── public/                         # 公開資源
+├── .github/
+│   └── workflows/                  # GitHub Actions 流水線
+├── .env                            # 環境變數範本（Git 追蹤）
+├── .env.local                      # 本地環境變數（Git 忽略）
+├── .gitignore                      # Git 忽略設定
+├── package.json                    # 專案套件
+├── tsconfig.json                   # TypeScript 設定
+├── tailwind.config.js              # Tailwind CSS 設定
+├── next.config.ts                  # Next.js 設定
+└── README.md                       # 專案說明文件
+```
+
+---
+
+## 📁 核心文件地圖
+
+```text
+app/api/
+├── prompt/generate/          ✅ 生成 prompt 預覽
+├── evaluation/generate/      ✅ 呼叫 Gemini 生成評語
+├── evaluations/
+│   ├── list/                 ✅ 查詢歷史 (分頁)
+│   └── [id]/                 ✅ 取得/刪除詳情
+└── admin/
+    ├── wisdoms/              ✅ 箴言 CRUD
+    └── tones/                ✅ 語氣 CRUD
+
+lib/
+├── gemini.ts                 ✅ Gemini API 封裝
+├── prompts.ts                ✅ Prompt 模板引擎
+├── types.ts                  ✅ TypeScript 定義
+└── prisma.ts                 ✅ Prisma Client
+
+prisma/
+├── schema.prisma             ✅ 5 個模型 + 初始化
+└── seed.ts                   ✅ 6 箴言 + 4 語氣 + 2 學生
+```
+
+---
+
 ## ✅ 完成進度
 
 | Phase | 名稱 | 狀態 | 完成度 |
@@ -93,65 +181,45 @@
 
 ---
 
-## 📁 專案結構
+## 🎯 下一步（Phase 3）
 
+### 立即待做
+1. 開發 9 個前端 UI 元件
+2. 建立 4 個主頁面（主表單、歷史、管理頁面）
+3. 整合 API 層
+4. 測試端到端流程
+
+### 元件清單
+```text
+StudentInfoForm.tsx      # 學生資訊輸入
+WisdomSelector.tsx       # 箴言多選
+ToneSelector.tsx         # 語氣選擇
+EvaluationForm.tsx       # 整合表單
+PromptPreview.tsx        # Prompt 預覽
+EvaluationResult.tsx     # 評語展示
+EvaluationHistory.tsx    # 歷史列表
+WisdomManager.tsx        # 後台箴言管理
+ToneManager.tsx          # 後台語氣管理
 ```
-academic-evaluation/
-├── app/
-│   ├── layout.tsx                  # 布局
-│   ├── page.tsx                    # 首頁（評語生成表單）
-│   ├── globals.css                 # 全域樣式
-│   ├── api/
-│   │   ├── prompt/
-│   │   │   └── generate/route.ts   # 生成 prompt 預覽
-│   │   ├── evaluation/
-│   │   │   └── generate/route.ts   # 生成評語（呼叫 Gemini）
-│   │   ├── evaluations/
-│   │   │   ├── list/route.ts       # 取得評語列表
-│   │   │   └── [id]/route.ts       # 取得評語詳情
-│   │   └── admin/
-│   │       ├── wisdoms/route.ts    # 箴言 CRUD
-│   │       └── tones/route.ts      # 語氣 CRUD
-│   ├── history/
-│   │   └── page.tsx                # 評語歷史頁面
-│   └── admin/
-│       ├── page.tsx                # 後台管理首頁
-│       ├── wisdoms/page.tsx        # 四字箴言管理
-│       ├── tones/page.tsx          # 語氣管理
-│       └── layout.tsx              # 後台佈局
-├── components/
-│   ├── ui/                         # shadcn/ui 元件
-│   ├── StudentInfoForm.tsx         # 學生資訊輸入
-│   ├── WisdomSelector.tsx          # 箴言選擇器
-│   ├── ToneSelector.tsx            # 語氣選擇器
-│   ├── EvaluationForm.tsx          # 整合表單
-│   ├── PromptPreview.tsx           # Prompt 預覽
-│   ├── EvaluationResult.tsx        # 評語展示
-│   ├── EvaluationHistory.tsx       # 歷史列表
-│   ├── WisdomManager.tsx           # 箴言管理元件
-│   └── ToneManager.tsx             # 語氣管理元件
-├── lib/
-│   ├── types.ts                    # TypeScript 型別定義
-│   ├── gemini.ts                   # Gemini API 封裝
-│   ├── prompts.ts                  # Prompt 模板引擎
-│   ├── prisma.ts                   # Prisma Client 實例
-│   └── utils.ts                    # 工具函式
-├── prisma/
-│   ├── schema.prisma               # Prisma 資料模型
-│   ├── seed.ts                     # 初始化腳本
-│   └── migrations/                 # 資料庫遷移記錄
-├── public/                         # 公開資源
-├── .github/
-│   └── workflows/                  # GitHub Actions 流水線
-├── .env                            # 環境變數範本（Git 追蹤）
-├── .env.local                      # 本地環境變數（Git 忽略）
-├── .gitignore                      # Git 忽略設定
-├── package.json                    # 專案套件
-├── tsconfig.json                   # TypeScript 設定
-├── tailwind.config.js              # Tailwind CSS 設定
-├── next.config.ts                  # Next.js 設定
-└── README.md                       # 專案說明文件
+
+---
+
+## 🔐 環境變數清單
+
+```env
+# Supabase 連線
+DATABASE_URL=postgresql://[...pooler.supabase.com:6543/](https://...pooler.supabase.com:6543/)...
+DIRECT_URL=postgresql://[...pooler.supabase.com:5432/](https://...pooler.supabase.com:5432/)...
+
+# Gemini API
+GEMINI_API_KEY=your_api_key
+NEXT_PUBLIC_GEMINI_MODEL=gemini-2.5-flash
+
+# 後台管理
+ADMIN_PASSWORD=your_password
 ```
+
+✅ 已設定於 `.env.local` (Git 忽略)
 
 ---
 
@@ -203,61 +271,30 @@ curl -X GET http://localhost:3000/api/admin/wisdoms \
 
 ---
 
-## 🔍 故障排除快速表
+## 📚 常用命令速查表
 
-| 問題 | 症狀 | 解決方案 |
-|------|------|---------|
-| Seed 無輸出 | `npx prisma db seed` 沒有資訊 | ✅ 已修復 - package.json 設定 OK |
-| 型別檢查失敗 | TypeScript 編譯錯誤 | 執行 `npx tsc --noEmit` 檢查 |
-| 資料庫同步失敗 | Drift detected 警告 | 執行 `npx prisma migrate reset` |
-| 連線池超時 | 遷移或查詢掛起 | 檢查 DIRECT_URL 設置 |
-| API 認證失敗 | 401 Unauthorized | 檢查 `Authorization: Bearer` 頭 |
+```bash
+# 開發迭代
+npm run dev                           # 啟動開發伺服器
+npx tsc --noEmit                      # 型別檢查
+npm run lint                          # 程式碼檢查
 
-**詳細排障指南：** 見各技術規範文件（react-typescript、prisma-orm、api-routes）或開發日記章節
+# 資料庫操作
+npx prisma migrate dev --name <name>  # 建立新遷移
+npx prisma migrate reset              # 重置資料庫
+npx prisma db seed                    # 執行 seed
+npx prisma studio                     # 打開資料庫管理介面
+npx prisma generate                   # 重新生成 Prisma Client
 
----
+# Git 操作
+git add .
+git commit -m "feat: description"
+git push origin main
 
-## 🔐 環境變數清單
-
-```env
-# Supabase 連線
-DATABASE_URL=postgresql://...pooler.supabase.com:6543/...
-DIRECT_URL=postgresql://...pooler.supabase.com:5432/...
-
-# Gemini API
-GEMINI_API_KEY=your_api_key
-NEXT_PUBLIC_GEMINI_MODEL=gemini-2.5-flash
-
-# 後台管理
-ADMIN_PASSWORD=your_password
-```
-
-✅ 已設定於 `.env.local` (Git 忽略)
-
----
-
-## 📁 核心文件地圖
-
-```
-app/api/
-├── prompt/generate/          ✅ 生成 prompt 預覽
-├── evaluation/generate/      ✅ 呼叫 Gemini 生成評語
-├── evaluations/
-│   ├── list/                 ✅ 查詢歷史 (分頁)
-│   └── [id]/                 ✅ 取得/刪除詳情
-└── admin/
-    ├── wisdoms/              ✅ 箴言 CRUD
-    └── tones/                ✅ 語氣 CRUD
-
-lib/
-├── gemini.ts                 ✅ Gemini API 封裝
-├── prompts.ts                ✅ Prompt 模板引擎
-├── types.ts                  ✅ TypeScript 定義
-└── prisma.ts                 ✅ Prisma Client
-
-prisma/
-├── schema.prisma             ✅ 5 個模型 + 初始化
-└── seed.ts                   ✅ 6 箴言 + 4 語氣 + 2 學生
+# 測試 API
+curl -X POST http://localhost:3000/api/prompt/generate \
+-H "Content-Type: application/json" \
+-d '{"studentName":"小明","wisdomIds":["id"],"toneId":"id"}'
 ```
 
 ---
@@ -280,26 +317,29 @@ prisma/
 
 ---
 
-## 🎯 下一步（Phase 3）
+## 🔍 故障排除快速表
 
-### 立即待做
-1. 開發 9 個前端 UI 元件
-2. 建立 4 個主頁面（主表單、歷史、管理頁面）
-3. 整合 API 層
-4. 測試端到端流程
+| 問題 | 症狀 | 解決方案 |
+|------|------|---------|
+| Seed 無輸出 | `npx prisma db seed` 沒有資訊 | ✅ 已修復 - package.json 設定 OK |
+| 型別檢查失敗 | TypeScript 編譯錯誤 | 執行 `npx tsc --noEmit` 檢查 |
+| 資料庫同步失敗 | Drift detected 警告 | 執行 `npx prisma migrate reset` |
+| 連線池超時 | 遷移或查詢掛起 | 檢查 DIRECT_URL 設置 |
+| API 認證失敗 | 401 Unauthorized | 檢查 `Authorization: Bearer` 頭 |
 
-### 元件清單
-```
-StudentInfoForm.tsx      # 學生資訊輸入
-WisdomSelector.tsx       # 箴言多選
-ToneSelector.tsx         # 語氣選擇
-EvaluationForm.tsx       # 整合表單
-PromptPreview.tsx        # Prompt 預覽
-EvaluationResult.tsx     # 評語展示
-EvaluationHistory.tsx    # 歷史列表
-WisdomManager.tsx        # 後台箴言管理
-ToneManager.tsx          # 後台語氣管理
-```
+**詳細排障指南：** 見各技術規範文件（react-typescript、prisma-orm、api-routes）或開發日記章節
+
+---
+
+## 🔍 故障排除快速指南
+
+| 問題 | 症狀 | 解決步驟 |
+|------|------|---------|
+| **Seed 無輸出** | `npx prisma db seed` 沒有任何資訊 | 檢查 package.json 中 `prisma.seed` 設定 |
+| **型別檢查失敗** | TypeScript 編譯錯誤 | 執行 `npx tsc --noEmit` 檢查詳細錯誤 |
+| **資料庫同步問題** | Drift detected 警告 | 執行 `npx prisma migrate reset` |
+| **連線池超時** | 遷移或查詢掛起 | 檢查 DIRECT_URL 是否正確設置 |
+| **API 認證失敗** | 401 Unauthorized | 檢查 Authorization 頭格式與密碼 |
 
 ---
 
@@ -508,64 +548,6 @@ datasource db {
 
 ---
 
-## 📚 常用命令速查表
-
-```bash
-# 開發迭代
-npm run dev                           # 啟動開發伺服器
-npx tsc --noEmit                      # 型別檢查
-npm run lint                          # 程式碼檢查
-
-# 資料庫操作
-npx prisma migrate dev --name <name>  # 建立新遷移
-npx prisma migrate reset              # 重置資料庫
-npx prisma db seed                    # 執行 seed
-npx prisma studio                     # 打開資料庫管理介面
-npx prisma generate                   # 重新生成 Prisma Client
-
-# Git 操作
-git add .
-git commit -m "feat: description"
-git push origin main
-
-# 測試 API
-curl -X POST http://localhost:3000/api/prompt/generate \
--H "Content-Type: application/json" \
--d '{"studentName":"小明","wisdomIds":["id"],"toneId":"id"}'
-```
-
----
-
-## 🔍 故障排除快速指南
-
-| 問題 | 症狀 | 解決步驟 |
-|------|------|---------|
-| **Seed 無輸出** | `npx prisma db seed` 沒有任何資訊 | 檢查 package.json 中 `prisma.seed` 設定 |
-| **型別檢查失敗** | TypeScript 編譯錯誤 | 執行 `npx tsc --noEmit` 檢查詳細錯誤 |
-| **資料庫同步問題** | Drift detected 警告 | 執行 `npx prisma migrate reset` |
-| **連線池超時** | 遷移或查詢掛起 | 檢查 DIRECT_URL 是否正確設置 |
-| **API 認證失敗** | 401 Unauthorized | 檢查 Authorization 頭格式與密碼 |
-
----
-
-## 📈 經驗教訓總結
-
-✅ **做得好的事：**
-- 及早引入 TypeScript + ESLint
-- 在開發早期建立完整的 API 層
-- 使用 Zod 進行輸入驗證
-- 詳細的環境變數設定
-
-⚠️ **可改進的地方：**
-- 應更早發現 package.json 缺少 seed 設定
-- 型別檢查應在每次提交前執行
-- 可新增 pre-commit hooks 自動檢查
-
-🎯 **未來行動：**
-- 新增 husky + lint-staged 自動化檢查
-- 編寫單元測試（Jest）
-- 設置 GitHub Actions 自動化流水線  
-
 ## 📋 已解決的問題歷史
 
 ### TypeScript 型別問題
@@ -617,4 +599,25 @@ return !!(
   prompt &&
   prompt.length > 50
 )
+```
+
+---
+
+## 📈 經驗教訓總結
+
+✅ **做得好的事：**
+- 及早引入 TypeScript + ESLint
+- 在開發早期建立完整的 API 層
+- 使用 Zod 進行輸入驗證
+- 詳細的環境變數設定
+
+⚠️ **可改進的地方：**
+- 應更早發現 package.json 缺少 seed 設定
+- 型別檢查應在每次提交前執行
+- 可新增 pre-commit hooks 自動檢查
+
+🎯 **未來行動：**
+- 新增 husky + lint-staged 自動化檢查
+- 編寫單元測試（Jest）
+- 設置 GitHub Actions 自動化流水線
 ```

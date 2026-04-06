@@ -15,9 +15,9 @@ applyTo: "**/app/api/**/route.ts"
 
 ```
 ✅ 正確（RESTful）：
-- /api/prompt/generate          POST  生成 prompt
-- /api/evaluation/generate      POST  生成評語
-- /api/evaluations/list         GET   查詢歷史
+- /api/prompts/preview          POST  生成 prompt 預覽（不保存）
+- /api/evaluations              POST  生成評語
+- /api/evaluations              GET   查詢歷史
 - /api/evaluations/[id]         GET   單個詳情
 - /api/evaluations/[id]         DELETE 刪除
 - /api/admin/wisdoms            GET   列表 (認證)
