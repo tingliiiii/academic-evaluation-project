@@ -12,6 +12,7 @@ interface Evaluation {
   studentName: string;
   toneName: string;
   wisdoms: string[];
+  content: string;
   createdAt: string;
 }
 interface EvaluationHistoryProps { limit?: number; showPagination?: boolean; }
